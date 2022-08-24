@@ -13,7 +13,7 @@ import {
 } from "firebase/auth";
 import md5 from "md5";
 //2어디서 import하는건지 확인하기 : firebase메소드
-import {getDatabase, ref, set} from "firebase/database"
+import { getDatabase, ref, set } from "firebase/database";
 
 const IsPasswordValid = (password, confirmPassword) => {
   if (password.length < 6 || confirmPassword.length < 6) {
@@ -68,12 +68,17 @@ const Join = () => {
         photoURL: `https://www.gravatar.com/avatar/${md5(email)}?d=retro`,
       });
       // 리얼타임 데이터베이스에 저장
-      await set(ref(getDatabase(),'users/' + user.id), {
+      await set(ref(getDatabase(), "users/" + user.id), {
         name: user.displayName,
-        avatar:user.photoURL
-      })
-      
-    } catch (e) {}
+        avatar: user.photoURL,
+      });
+      //5. TODO: store에 user 정보를 redux로 구현하려고 함
+    } catch (e) {
+      //3.firebase에서 에러를 뿌려주는 메서드 message
+      setError(e.message);
+      //4.로딩 풀어주기
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -116,7 +121,7 @@ const Join = () => {
                 required
                 fullWidth
                 label="이메일"
-                autoComplete="off"
+                // autoComplete="off"
                 autoFocus
               />
             </Grid>
@@ -127,7 +132,7 @@ const Join = () => {
                 fullWidth
                 label="비밀번호"
                 autoFocus
-                type="password"
+                // type="password"
               />
             </Grid>
             <Grid item xs={12}>
@@ -137,7 +142,7 @@ const Join = () => {
                 fullWidth
                 label="비밀번호확인"
                 autoFocus
-                type="password"
+                // type="password"
               />
             </Grid>
           </Grid>
