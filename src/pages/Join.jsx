@@ -14,6 +14,8 @@ import {
 import md5 from "md5";
 //2어디서 import하는건지 확인하기 : firebase메소드
 import { getDatabase, ref, set } from "firebase/database";
+import { setUser } from "../store/UserReducer";
+import { useDispatch } from "react-redux";
 
 const IsPasswordValid = (password, confirmPassword) => {
   if (password.length < 6 || confirmPassword.length < 6) {
@@ -26,6 +28,7 @@ const IsPasswordValid = (password, confirmPassword) => {
 };
 
 const Join = () => {
+  const dispatch = useDispatch();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   //FormData API
@@ -72,6 +75,7 @@ const Join = () => {
         name: user.displayName,
         avatar: user.photoURL,
       });
+      dispatch(setUser(user));
       //5. TODO: store에 user 정보를 redux로 구현하려고 함
     } catch (e) {
       //3.firebase에서 에러를 뿌려주는 메서드 message
