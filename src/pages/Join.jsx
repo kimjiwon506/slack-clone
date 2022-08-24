@@ -5,8 +5,19 @@ import React, { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { Link } from "react-router-dom";
 
+const IsPasswordValid = (password, confirmPassword) => {
+  if (password.length < 6 || confirmPassword.length < 6) {
+    return false;
+  } else if (password !== confirmPassword) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 const Join = () => {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false)
   //FormData API
   //이 처럼 보통은 HTML5의 <form> 태그이용해 input 값을 서버에 전송하지만, 자바스크립트에서 FormData() 클래스를 이용해 똑같이 스크립트로도 전송을 할수 있다.
   //FormData란 HTML 단이 아닌 자바스크립트 단에서 폼 데이터를 다루는 객체라고 보면 된다. 그리고 HTML에서의 Submit 제출 동작은 Ajax를 통해 서버에 제출한다고 보면 된다.
@@ -24,7 +35,15 @@ const Join = () => {
       setError("모든 항목을 입력해주세요");
       return;
     }
+    if(!IsPasswordValid(password, confirmPassword)){
+      setError("비밀번호를 확인하세요.");
+      return;
+    }
   };
+
+  const postUserData = async( name, email, password ) => {
+    setLoading(true)
+  }
 
   useEffect(() => {
     if (!error) return;
@@ -102,6 +121,7 @@ const Join = () => {
             variant="contained"
             color="secondary"
             sx={{ mt: 3, mb: 2 }}
+            loading={loading}
           >
             회원가입
           </LoadingButton>
